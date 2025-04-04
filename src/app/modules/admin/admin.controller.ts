@@ -9,7 +9,7 @@ const getAllFromDb = async (req: Request, res: Response) => {
   try {
    
      const filters= pick(req.query, adminFilterableField);
-     const options= pick(req.query,['limit','page'])
+     const options= pick(req.query,['limit','page','sortBy','sortOrder'])
      console.log(options);
      
     const result = await AdminServices.getAllFromDb(filters,options);
