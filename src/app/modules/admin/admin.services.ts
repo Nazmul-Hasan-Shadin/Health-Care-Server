@@ -1,6 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { adminSearchableField } from "./admin.const";
 import { paginationHelper } from "../../../helpers/paginationHeper";
+import prisma from "../../../shared/prisma";
 // OR:[
 //   {
 //     name:{
@@ -15,7 +16,7 @@ import { paginationHelper } from "../../../helpers/paginationHeper";
 //     }
 //   }
 // ]
-const prisma = new PrismaClient();
+
 
 
 
