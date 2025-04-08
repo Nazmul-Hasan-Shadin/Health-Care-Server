@@ -33,10 +33,21 @@ const refreshToken=catchAsync(async(req,res,next)=>{
        statusCode:200,
        message:'User logged in successful',
        data:result
-    //    data:{
-    //        accessToken:result.accessToken,
-    //        needPasswordChange:result.needPasswordChange
-    //    }
+ 
+    })
+})
+
+
+const changePassword=catchAsync(async(req,res,next)=>{
+
+    const user=req.user;
+    const result= await authServices.changePassword(user,req.body)
+    sendResponse(res,{
+       success:true,
+       statusCode:200,
+       message:'User logged in successful',
+       data:result
+ 
     })
 })
 
@@ -44,5 +55,7 @@ const refreshToken=catchAsync(async(req,res,next)=>{
 
 export const AuthController={
     loginUser,
-    refreshToken
+    refreshToken,
+    changePassword
+    
 }

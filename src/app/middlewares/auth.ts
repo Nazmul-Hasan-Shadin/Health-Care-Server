@@ -13,6 +13,8 @@ const auth=(...roles:string[])=>{
                 throw new AppError(501,'You are unauthorized')
             }
             const verifiedUser= jwtHelpers.verifyToken(token,config.jwt.accessToken as Secret) 
+            req.user=verifiedUser
+            
             if (roles.length && !roles.includes(verifiedUser.role)) {
                 throw new Error('You are not authorized') 
             }
