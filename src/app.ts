@@ -2,6 +2,7 @@ import express, { Request, Response, urlencoded } from 'express'
 import cors from 'cors'
 import { UserRoutes } from './app/modules/User/user.route';
 import { adminRoutes } from './app/modules/admin/admin.route';
+import router from './app/routes';
 
 const app=express();
 app.use(express.json())
@@ -13,6 +14,8 @@ app.use(cors({
 app.get('/',(req:Request,res:Response)=>{
     res.send('app is listening at 3000')
 })
-app.use('/api/v1',UserRoutes)
-app.use('/api/v1/admin',adminRoutes)
+
+app.use('/api/v1',router)
+
+
 export default app

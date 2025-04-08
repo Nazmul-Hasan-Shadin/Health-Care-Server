@@ -49,8 +49,10 @@ enum UserRole {
   ADMIN
   DOCTOR
   PATIENT
+
 }
 enum UserStatus {
   ACTIVE
   BLOCK
+  DELETED
 }
