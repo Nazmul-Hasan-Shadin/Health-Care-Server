@@ -39,11 +39,13 @@ const getAllFromDb = async (params:IAdminFiterRequest, options:IPaginationOption
     });
   }
 
+  //=====for exact search like email contactnumber here i use it 
+
   if (Object.keys(filterData).length > 0) {
     andCondition.push({
       AND: Object.keys(filterData).map((filed) => ({
         [filed]: {
-          equals: filterData[filed],
+          equals: (filterData as any)[filed],
         },
       })),
     });

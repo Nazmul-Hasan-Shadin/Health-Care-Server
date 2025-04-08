@@ -9,7 +9,7 @@ const validateRequest=(zodSchema:AnyZodObject)=>{
             body:req.body
         })
        return  next()
-      console.log(parseddata,'iam parseddat');
+
        } catch (error) {
          next(error)
        }

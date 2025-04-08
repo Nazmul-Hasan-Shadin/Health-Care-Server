@@ -12,7 +12,7 @@ const getAllFromDb =catchAsync(async (req, res,next) => {
 
     const filters = pick(req.query, adminFilterableField); //http://locahost.com?name=shadin& email=joy@gmail.com& contactnumber=01302
     const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder'])
-    console.log(options, 'iam optoions');
+   
 
     console.log(options);
 
