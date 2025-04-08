@@ -1,15 +1,16 @@
-import express, { Request, Response } from "express";
+import express, { Request, RequestHandler, Response } from "express";
 import { AdminServices } from "./admin.services";
 import pick from "../../../shared/pick";
 import { adminFilterableField } from "./admin.const";
 import sendResponse from "../../../helpers/sendResponse";
+import catchAsync from "../../../helpers/catchAsync";
 
 
 
-const getAllFromDb = async (req: Request, res: Response) => {
-  try {
+const getAllFromDb =catchAsync(async (req, res,next) => {
+ 
 
-    const filters = pick(req.query, adminFilterableField);
+    const filters = pick(req.query, adminFilterableField); //http://locahost.com?name=shadin& email=joy@gmail.com& contactnumber=01302
     const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder'])
     console.log(options, 'iam optoions');
 
@@ -23,18 +24,14 @@ const getAllFromDb = async (req: Request, res: Response) => {
       meta: result.meta,
       data: result.data
     })
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.name,
-      error: error,
-    });
-  }
-};
+  
+   
+  
+})
 
-const getByIdFromDb = async (req: Request, res: Response) => {
+const getByIdFromDb = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  try {
+
 
     const result = await AdminServices.getByIdFromDb(id);
     sendResponse(res, {
@@ -44,19 +41,12 @@ const getByIdFromDb = async (req: Request, res: Response) => {
 
       data: result
     })
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.name,
-      error: error,
-    });
-  }
-};
 
-const updateIntoDb = async (req: Request, res: Response) => {
+});
+
+const updateIntoDb =catchAsync( async (req: Request, res: Response) => {
   const { id } = req.params;
-  try {
-
+ 
     const result = await AdminServices.updateIntoDb(id, req.body);
     sendResponse(res, {
       statusCode: 200,
@@ -65,35 +55,23 @@ const updateIntoDb = async (req: Request, res: Response) => {
 
       data: result
     })
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.name,
-      error: error,
-    });
-  }
-};
+  
+});
 
-const deleteFromDb = async (req: Request, res: Response) => {
+const deleteFromDb =catchAsync( async (req: Request, res: Response) => {
   const { id } = req.params;
-  try {
+
 
     const result = await AdminServices.deleteINTODB(id);
     sendResponse(res, {
       statusCode: 200,
-      success: true,
+      success: true, 
       message: 'Deleted',
 
       data: result
     })
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.name,
-      error: error,
-    });
-  }
-};
+
+})
 
 const softDeleteFromDb = async (req: Request, res: Response) => {
   const { id } = req.params;

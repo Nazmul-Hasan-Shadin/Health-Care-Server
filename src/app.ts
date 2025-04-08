@@ -19,5 +19,15 @@ app.get('/',(req:Request,res:Response)=>{
 app.use('/api/v1',router)
 
 app.use(globalErrorHandler)
+app.use((req:Request,res:Response,next:NextFunction)=>{
+ res.status(404).json({
+    success:false,
+    message:'Route not found',
+    error:{
+        path:req.originalUrl,
+        message:'your requested route not found'
+    }
+ })
+})
 
 export default app
