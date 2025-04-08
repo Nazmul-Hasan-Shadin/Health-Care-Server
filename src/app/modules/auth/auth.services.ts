@@ -1,8 +1,9 @@
 import bcrypt from "bcrypt";
 import { UserRole, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { jwtHelpers } from "../../../helpers/jwtHelpers";
+import config from "../../../config";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -23,8 +24,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       email: userData.email,
       role: userData.role,
     },
-    "privatekey",
-    "5m"
+    config.jwt.accessToken as string,
+     config.jwt.accessToken_Expire as string
   );
 
   const refreshToken = jwtHelpers.generateToken(
@@ -32,8 +33,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       email: userData.email,
       role: userData.role,
     },
-    "bangladesh",
-    "30d"
+   config.jwt.refresh_token_secret as string,
+   config.jwt.refreshToken_Expire as string
   );
 
   return {
@@ -46,7 +47,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
 const refreshToken = async (token: string) => {
   let decodedData;
   try {
-    decodedData = jwt.verify(token, "bangladesh");
+    decodedData =jwtHelpers.verifyToken(token,config.jwt.refresh_token_secret as  string)
     console.log(decodedData);
   } catch (error) {
     throw new Error("you are not authorized");
@@ -55,6 +56,7 @@ const refreshToken = async (token: string) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: decodedData?.email,
+      status:UserStatus.ACTIVE
     },
   });
   const accessToken = jwtHelpers.generateToken(
@@ -62,8 +64,8 @@ const refreshToken = async (token: string) => {
       email: userData?.email,
       role: userData?.role,
     },
-    "privatekey",
-    "5m"
+    config.jwt.accessToken as string,
+    config.jwt.accessToken_Expire as string
   );
 
   return {
