@@ -6,7 +6,7 @@ import AppError from "../errors/AppErrors";
 
 const auth=(...roles:string[])=>{
     
-    return async(req:Request,res:Response,next:NextFunction)=>{
+    return async(req:Request & {user?:any},res:Response,next:NextFunction)=>{
         try {
             const token=req.headers.authorization;
             if (!token) {

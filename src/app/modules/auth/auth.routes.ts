@@ -6,5 +6,6 @@ const router= express.Router()
 router.post('/login',AuthController.loginUser)
 router.post('/refresh-token',AuthController.refreshToken)
 router.post('/change-password',auth(UserRole.ADMIN,UserRole.DOCTOR,UserRole.DOCTOR,UserRole.PATIENT),AuthController.changePassword)
+router.post('/forget-password',AuthController.forgetPassword)
 
 export const authRoutes=router

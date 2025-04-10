@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from "express";
 import catchAsync from "../../../helpers/catchAsync";
 import sendResponse from "../../../helpers/sendResponse";
 import { authServices } from "./auth.services";
@@ -38,7 +39,7 @@ const refreshToken=catchAsync(async(req,res,next)=>{
 })
 
 
-const changePassword=catchAsync(async(req,res,next)=>{
+const changePassword=catchAsync(async(req:Request & {user?:any},res:Response,next:NextFunction)=>{
 
     const user=req.user;
     const result= await authServices.changePassword(user,req.body)
@@ -51,11 +52,24 @@ const changePassword=catchAsync(async(req,res,next)=>{
     })
 })
 
+const forgetPassword=catchAsync(async(req:Request,res:Response)=>{
+  const result=await authServices.forgetPassword(req.body)
+
+  sendResponse(res,{
+    success:true,
+    statusCode:200,
+    message:'forget',
+    data:result
+
+ })
+  
+})
 
 
 export const AuthController={
     loginUser,
     refreshToken,
-    changePassword
+    changePassword,
+    forgetPassword
     
 }
