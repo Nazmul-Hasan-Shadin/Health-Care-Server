@@ -26,8 +26,7 @@ const emailSender=async(email:string,html:string)=>{
       
     console.log(info);
     
-      
-     
+   
       
 }
 

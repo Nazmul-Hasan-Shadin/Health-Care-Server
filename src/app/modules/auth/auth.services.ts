@@ -5,6 +5,7 @@ import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import config from "../../../config";
 import emailSender from "./emailSender";
+import AppError from "../../errors/AppErrors";
 
 const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -129,10 +130,41 @@ const changePassword=async(user:User,payload:any)=>{
      
 
  }
+ 
+ const resetPassword=async(token:string,payload:{id:string,password:string})=>{
+
+      console.log(payload.id,'k');
+      const userData= await prisma.user.findUniqueOrThrow({
+        where:{
+            id:payload.id,
+            status:UserStatus.ACTIVE
+        }
+      })
+ 
+      
+
+       const isValidToken=jwtHelpers.verifyToken(token,config.jwt.reset_token_pass as string)
+       if (!isValidToken) {
+        throw new AppError(501,'forbidden')
+       }
+       const hasPassword=bcrypt.hash(payload.password,12
+       
+       )
+       const result= await prisma.user.update({
+        where:{
+            id:payload.id
+        },
+        data:{
+            password:payload.password
+        }
+       })
+      return result
+ }
 
 export const authServices = {
   loginUser,
   refreshToken,
   changePassword,
-  forgetPassword
+  forgetPassword,
+  resetPassword
 };
