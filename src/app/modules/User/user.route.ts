@@ -6,6 +6,7 @@ import { Secret } from "jsonwebtoken";
 import auth from "../../middlewares/auth";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { UserValidation } from "./userValidation";
+import { UserRole } from "@prisma/client";
 
 
 
@@ -27,7 +28,7 @@ router.post("/create-patient",fileUploader.upload.single('file'),
  }
 );
 
-router.get("/patient",
+router.get("/",auth(UserRole.SUPER_ADMIN,UserRole.ADMIN),
  (req:Request,res:Response,next:NextFunction)=>{
   
    
@@ -35,6 +36,7 @@ router.get("/patient",
  }
 );
 
+router.patch('/:id/status',auth(UserRole.ADMIN,UserRole.SUPER_ADMIN),userController.changeProfileStatus)
 
 
 

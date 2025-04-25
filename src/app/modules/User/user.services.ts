@@ -1,5 +1,5 @@
 import { fileUploader } from './../../../helpers/fileUploader';
-import { UserRole } from "@prisma/client";
+import { UserRole, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
 
@@ -141,7 +141,14 @@ const getAllUser=async(params:Record<string,any>)=>{
   })
   
   const totalCount=await prisma.user.count({
-    where:filterAndCondition
+    where:filterAndCondition,
+    select:{
+      id:true,
+      email:true,
+      role:true,
+      status:true,
+      needPasswordChange:true,
+    }
   })
 
  return {
@@ -153,9 +160,25 @@ const getAllUser=async(params:Record<string,any>)=>{
 
 
 }
+
+const changeProfileStatus=async(id:string,status:UserStatus)=>{
+
+  await prisma.user.findUniqueOrThrow({
+     where:{
+      id:id
+     }
+  })
+   const result=await prisma.user.update({
+    where:{
+      id:id
+    },
+    data:status
+   })
+}
 export const userService = {
   createAdmin,
   createDoctor,
   createPatient,
-  getAllUser
+  getAllUser,
+  changeProfileStatus
 };
