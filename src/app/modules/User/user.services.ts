@@ -2,6 +2,8 @@ import { fileUploader } from './../../../helpers/fileUploader';
 import { UserRole, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../../../shared/prisma";
+import { Request } from 'express';
+import { IAuthUsers } from '../../interfaces/common';
 
 const createAdmin = async (req: any) => {
   //  console.log(req.body);
@@ -176,7 +178,7 @@ const changeProfileStatus=async(id:string,status:UserStatus)=>{
    })
 }
 
-const getMyProfile=async(user)=>{
+const getMyProfile=async(user:IAuthUsers)=>{
    
   const userInfo=await prisma.user.findUniqueOrThrow({
     where:{
@@ -226,11 +228,68 @@ else   if (userInfo.role===UserRole.PATIENT) {
   return {...userInfo,...profileInfo}
 
 }
+
+const updateMyProfile=async(user:IAuthUsers,req:Request)=>{
+  const userInfo=await prisma.user.findUniqueOrThrow({
+    where:{
+      email:user?.email,
+      status:UserStatus.ACTIVE
+    },
+
+
+   
+  })
+
+  const file=req.file
+  if (file) {
+     const uploadToCloudinary=await fileUploader.uploadToCloudinary(file)
+     req.body.profilePhoto=uploadToCloudinary.secure_url
+  }
+   let profileInfo;
+  if (userInfo.role===UserRole.SUPER_ADMIN) {
+      profileInfo=await prisma.admin.update({
+        where:{
+          email:userInfo.email
+        },
+        data:req.body
+      })
+  }
+  else if (userInfo.role===UserRole.ADMIN) {
+    profileInfo=await prisma.admin.update({
+      where:{
+        email:userInfo.email
+      },
+      data:req.body
+    })
+}
+else if (userInfo.role===UserRole.DOCTOR) {
+  profileInfo=await prisma.doctor.update({
+    where:{
+      email:userInfo.email
+    },
+    data:req.body
+  })
+}
+
+else   if (userInfo.role===UserRole.PATIENT) {
+  profileInfo=await prisma.patient.update({
+    where:{
+      email:userInfo.email
+    },
+    data:req.body
+  })
+}
+
+return {
+  ...profileInfo
+}
+}
 export const userService = {
   createAdmin,
   createDoctor,
   createPatient,
   getAllUser,
   changeProfileStatus,
-  getMyProfile
+  getMyProfile,
+  updateMyProfile
 };

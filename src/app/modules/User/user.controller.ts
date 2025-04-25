@@ -1,3 +1,4 @@
+import { IAuthUsers } from './../../interfaces/common';
 import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.services";
 import catchAsync from "../../../helpers/catchAsync";
@@ -104,11 +105,28 @@ const getMyProfile = catchAsync(async (req, res) => {
 
   });
 });
+
+
+const updateMyProfile = catchAsync(async (req:Request & {user?:IAuthUsers}, res:Response) => {
+ 
+   const user=req.user
+  const result = await userService.updateMyProfile(user as IAuthUsers,req);
+
+  sendResponse(res, {
+    
+    success: true,
+    statusCode:200,
+    message: "My profile updated",
+    data: result,
+
+  });
+});
 export const userController = {
   createAdmin,
   createDoctor,
   createPatient,
   getallUser,
   changeProfileStatus,
-  getMyProfile
+  getMyProfile,
+  updateMyProfile
 };
