@@ -11,12 +11,31 @@ import { UserValidation } from "./userValidation";
 
 const router = express.Router();
 
-router.post("/",auth("ADMIN","SUPER_ADMIN"),fileUploader.upload.single('file'),
+router.post("/create-admin",auth("ADMIN","SUPER_ADMIN"),fileUploader.upload.single('file'),
  (req:Request,res:Response,next:NextFunction)=>{
   
    req.body =UserValidation.createAdmin.parse(JSON.parse(req.body.data))
     return userController.createAdmin(req,res,next)
  }
 );
+
+router.post("/create-patient",fileUploader.upload.single('file'),
+ (req:Request,res:Response,next:NextFunction)=>{
+  
+   req.body =UserValidation.createPatient.parse(JSON.parse(req.body.data))
+    return userController.createPatient(req,res,next)
+ }
+);
+
+router.get("/patient",
+ (req:Request,res:Response,next:NextFunction)=>{
+  
+   
+    return userController.getallUser(req,res,next)
+ }
+);
+
+
+
 
 export const UserRoutes = router;
