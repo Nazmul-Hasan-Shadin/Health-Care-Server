@@ -12,6 +12,8 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
+router.get('/me',auth(UserRole.ADMIN,UserRole.DOCTOR,UserRole.PATIENT,UserRole.SUPER_ADMIN),userController.getMyProfile)
+
 router.post("/create-admin",auth("ADMIN","SUPER_ADMIN"),fileUploader.upload.single('file'),
  (req:Request,res:Response,next:NextFunction)=>{
   
