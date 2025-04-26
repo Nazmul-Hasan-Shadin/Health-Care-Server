@@ -43,12 +43,12 @@ const createDoctor = async (req: any) => {
     const file=req.file;
   if (file) {
     const uploadToCloudinary=await fileUploader.uploadToCloudinary(req.file)
-    req.body.admin.profilePhoto=uploadToCloudinary?.secure_url
-    console.log(uploadToCloudinary,'jjkjkjk');
+    req.body.doctor.profilePhoto=uploadToCloudinary?.secure_url
+
     
   }
 
-  console.log(req.body,'knjjjj');
+
   
    
   const hashedPassword: string = await bcrypt.hash(req.body.password, 12);

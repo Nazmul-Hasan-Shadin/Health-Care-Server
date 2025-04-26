@@ -1,6 +1,68 @@
 import catchAsync from "../../../helpers/catchAsync";
 import prisma from "../../../shared/prisma";
 
+
+const getAllDoctorFromDb=async(params:Record<string,any>)=>{
+   const {searchTerm ,  specialties, ...filterData}=params;
+   console.log(filterData,'filterdata');
+   console.log(specialties);
+   
+   
+   const andCondition=[];
+    
+   if (searchTerm) {
+      andCondition.push({
+       OR:['name','email','registrationNumber'].map(field=>({
+         [field]:{
+            contains:searchTerm,
+            mode:'insensitive'
+         }
+       }))
+      })
+   }
+
+   if (specialties && specialties.length>0) {
+     andCondition.push({
+        doctorSpecialties:{
+            some:{
+                specialty:{
+                    title:{
+                        contains:specialties,
+                        mode:'insensitive'
+                    }
+                }
+            }
+        }
+     })
+   }
+
+   if (Object.keys(filterData).length) {
+       andCondition.push({
+        AND:Object.keys(filterData).map(field=>({
+            [field]:{
+                equals:filterData[field]
+            }
+        }))
+       })
+   }
+
+   const finalAndCondition={AND:andCondition}
+
+   const result= await prisma.doctor.findMany({
+    where:finalAndCondition,
+    include:{
+        doctorSpecialties:{
+            include:{
+                specialty:true
+            }
+        }
+    }
+   })
+
+   return result
+
+}
+
 const updateDoctorFromDb = async (id: string, payload: any) => {
   const { specialties, ...doctorData } = payload;
   const doctorInfo = await prisma.doctor.findUniqueOrThrow({
@@ -68,4 +130,5 @@ const updateDoctorFromDb = async (id: string, payload: any) => {
 
 export const DoctorServices = {
   updateDoctorFromDb,
+  getAllDoctorFromDb
 };

@@ -30,7 +30,7 @@ const createDoctor = async (
     const result = await userService.createDoctor(req);
     res.status(200).json({
       success: true,
-      message: "Doctor created succesfully",
+      message: "Doctor created successfully",
       data: result,
     });
   } catch (error) {

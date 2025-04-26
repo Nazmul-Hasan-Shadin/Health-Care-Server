@@ -12,6 +12,17 @@ const updateDoctor=catchAsync(async(req,res,next)=>{
       });
 })
 
+const getAllDoctor=catchAsync(async(req,res,next)=>{
+    const result=await DoctorServices.getAllDoctorFromDb(req.query)
+    sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: "Doctor are retrieved successful",
+        data: result,
+      });
+})
+
 export const DoctorController={
-    updateDoctor
+    updateDoctor,
+    getAllDoctor
 }

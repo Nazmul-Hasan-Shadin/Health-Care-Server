@@ -22,6 +22,14 @@ router.post("/create-admin",auth("ADMIN","SUPER_ADMIN"),fileUploader.upload.sing
  }
 );
 
+router.post("/create-doctor",auth("ADMIN","SUPER_ADMIN"),fileUploader.upload.single('file'),
+ (req:Request,res:Response,next:NextFunction)=>{
+  
+   req.body =UserValidation.createDoctor.parse(JSON.parse(req.body.data))
+    return userController.createDoctor(req,res,next)
+ }
+);
+
 router.post("/create-patient",fileUploader.upload.single('file'),
  (req:Request,res:Response,next:NextFunction)=>{
   
