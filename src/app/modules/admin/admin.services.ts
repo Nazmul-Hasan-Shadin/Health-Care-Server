@@ -4,20 +4,7 @@ import { paginationHelper } from "../../../helpers/paginationHeper";
 import prisma from "../../../shared/prisma";
 import { IAdminFiterRequest } from "./admin.interface";
 import { IPaginationOptions } from "../../interfaces/pagination";
-// OR:[
-//   {
-//     name:{
-//       contains:params.searchTerm,
-//       mode:"insensitive"
-//     }
-//   },
-//   {
-//     email:{
-//       contains:params.searchTerm,
-//       mode:'insensitive'
-//     }
-//   }
-// ]
+
 
 
 
