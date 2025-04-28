@@ -64,7 +64,7 @@ model Doctor {
   averageRating      Float?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-
+  doctorSchedule DoctorSchedule[]
   user User @relation(fields: [email],references: [email])
   doctorSpecialties DoctorSpecialties[]
 
@@ -158,6 +158,30 @@ model MedicalReport {
 }
 
 
+model Schedule {
+  id String @id @default(uuid())
+  startDateTime DateTime
+  endDateTime DateTime
+
+  doctorSchedule DoctorSchedule[]
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model DoctorSchedule {
+  
+   doctorId String
+   scheduleId String
+   isBooked Boolean
+   appointment String
+   doctor Doctor @relation(fields: [doctorId],references: [id])
+
+  schedule Schedule @relation(fields: [scheduleId],references: [id])
+   @@id([doctorId,scheduleId])
+
+   @@map("doctor_schedules")
+  
+}
 
 
 
