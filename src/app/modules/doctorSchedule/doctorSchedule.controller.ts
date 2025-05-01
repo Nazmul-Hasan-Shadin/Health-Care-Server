@@ -1,8 +1,10 @@
 import catchAsync from "../../../helpers/catchAsync";
 import { fileUploader } from "../../../helpers/fileUploader";
 import sendResponse from "../../../helpers/sendResponse";
+import pick from "../../../shared/pick";
+import { ScheduleServices } from "../schedule/schedule.services";
 import { DoctorScheduleServices } from "./doctorSchedule.services";
-import { ScheduleServices } from "./schedule.services";
+
 
 
 const createDoctorSchedule = catchAsync(async (req, res) => {
@@ -18,8 +20,26 @@ const createDoctorSchedule = catchAsync(async (req, res) => {
   });
 });
 
+const getMySchedule = catchAsync(async (req, res) => {
+  const filters=pick(req.query,['startDate','endDate','isBooked'])
+  const options=pick(req.query,['limit','page','sortBy','sortOrder'])
+  const user=req.user
+  const result = await DoctorScheduleServices.getMySchedule(filters,options,user);
+
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: " My Schedule has retrieved",
+    data: result,
+  });
+});
+
+
+
 
 export const DoctorScheduleController = {
     createDoctorSchedule,
+    getMySchedule
 
 };
