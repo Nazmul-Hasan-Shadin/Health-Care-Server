@@ -7,6 +7,8 @@ import { DoctorScheduleServices } from "./doctorSchedule.services";
 
 
 
+// to do => get all doctorschedule
+
 const createDoctorSchedule = catchAsync(async (req, res) => {
     const user=req.user;
   const result = await DoctorScheduleServices.createDoctorScheduleIntoDb(user,req.body);
@@ -35,11 +37,27 @@ const getMySchedule = catchAsync(async (req, res) => {
   });
 });
 
+const deleteFromDb = catchAsync(async (req, res) => {
+
+  const user=req.user
+  const result = await DoctorScheduleServices.deleteFromDb(user,req.params.id);
+
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: " My Schedule deleted successfully",
+    data: result,
+  });
+});
+
+
 
 
 
 export const DoctorScheduleController = {
     createDoctorSchedule,
-    getMySchedule
+    getMySchedule,
+    deleteFromDb
 
 };

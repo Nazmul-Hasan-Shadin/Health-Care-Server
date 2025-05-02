@@ -5,6 +5,8 @@ import pick from "../../../shared/pick";
 import { ScheduleServices } from "./schedule.services";
 
 
+ // to do => delete and get by id
+
 const createSchedule = catchAsync(async (req, res) => {
   const result = await ScheduleServices.createSchedule(req.body);
 
