@@ -14,194 +14,240 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  email String @unique
-  password String
-  role UserRole
-  needPasswordChange Boolean @default(true)
-  status UserStatus @default(ACTIVE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String     @id @default(uuid())
+  email              String     @unique
+  password           String
+  role               UserRole
+  needPasswordChange Boolean    @default(true)
+  status             UserStatus @default(ACTIVE)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 
-  admin Admin?
-  doctor Doctor?
+  admin   Admin?
+  doctor  Doctor?
   patient Patient?
 
   @@map("users")
 }
 
 model Admin {
-   id String @id @default(uuid())
-   name String
-   email String @unique
-   profilePhoto String?
-   contactNumber String
-   isDeleted Boolean @default(false)
-   createdAt DateTime @default(now())
-   updatedAt DateTime @updatedAt
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  profilePhoto  String?
+  contactNumber String
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-   user User @relation(fields: [email],references:[email])
+  user User @relation(fields: [email], references: [email])
 
-   @@map("admins")
-
+  @@map("admins")
 }
 
 model Doctor {
-  id               String      @id @default(uuid())
-  name               String
-  email              String   @unique
-  profilePhoto       String?
-  contactNumber      String?
-  address            String?
-  registrationNumber String?
-  experience         String?
-  gender  Gender
-  appointmentFee     Float?
-  qualification      String?
+  id                  String              @id @default(uuid())
+  name                String
+  email               String              @unique
+  profilePhoto        String?
+  contactNumber       String?
+  address             String?
+  registrationNumber  String?
+  experience          String?
+  gender              Gender
+  appointmentFee      Float?
+  qualification       String?
   currentWorkingPlace String?
-  designation        String?
-  isDeleted          Boolean  @default(false)
-  averageRating      Float?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  doctorSchedule DoctorSchedule[]
-  user User @relation(fields: [email],references: [email])
-  doctorSpecialties DoctorSpecialties[]
+  designation         String?
+  isDeleted           Boolean             @default(false)
+  averageRating       Float?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  doctorSchedule      DoctorSchedule[]
+  user                User                @relation(fields: [email], references: [email])
+  doctorSpecialties   DoctorSpecialties[]
+  appointment         Appointment[]
 
- @@map("doctors")
+  @@map("doctors")
 }
-
 
 model Patient {
-  id               String      @id @default(uuid())
-  name               String
-  email              String   @unique
-  profilePhoto       String?
-  contactNumber      String?
-  address            String?
- 
-  isDeleted          Boolean  @default(false)
+  id            String  @id @default(uuid())
+  name          String
+  email         String  @unique
+  profilePhoto  String?
+  contactNumber String?
+  address       String?
 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  isDeleted Boolean @default(false)
 
-  user User @relation(fields: [email],references: [email])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user              User               @relation(fields: [email], references: [email])
   patientHealthData PatientHealthData?
-  medicalReport MedicalReport[]
+  medicalReport     MedicalReport[]
+  appointment       Appointment[]
 
- @@map("patients")
+  @@map("patients")
 }
 
-model Specialties{
-  id String @id @default (uuid())
-  title String
-  icon String
+model Specialties {
+  id                String              @id @default(uuid())
+  title             String
+  icon              String
   doctorSpecialties DoctorSpecialties[]
-  @@map("specialties")
 
+  @@map("specialties")
 }
 
-model DoctorSpecialties{
+model DoctorSpecialties {
   specialtiesId String
 
-  specialty Specialties @relation(fields: [specialtiesId],references: [id])
-  doctorId String
-  doctor Doctor @relation(fields: [doctorId],references: [id])
+  specialty Specialties @relation(fields: [specialtiesId], references: [id])
+  doctorId  String
+  doctor    Doctor      @relation(fields: [doctorId], references: [id])
 
-
-  @@id([specialtiesId,doctorId])
-
+  @@id([specialtiesId, doctorId])
   @@map("doctor_specialties")
 }
 
-
 model PatientHealthData {
-  id                   String   @id @default(uuid())
-  patientId            String   @unique
-  dateOfBirth          String
-  gender               Gender
-  bloodGroup           bloodGroup?
-  hasAllergies         Boolean? @default(false)
-  hasDiabetes          Boolean? @default(false)
-  height               String?
-  weight               String?
-  smokingStatus        String? 
-  dietaryPreferences   String?
-  pregnancyStatus      Boolean? @default(false)
-  mentalHealthHistory  String?
-  immunizationStatus   String?
-  hasPastSurgeries     Boolean? @default(false)
-  recentAnxiety        Boolean? @default(false)
-  recentDepression     Boolean? @default(false)
-  maritalStatus        String?
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id                  String      @id @default(uuid())
+  patientId           String      @unique
+  dateOfBirth         String
+  gender              Gender
+  bloodGroup          bloodGroup?
+  hasAllergies        Boolean?    @default(false)
+  hasDiabetes         Boolean?    @default(false)
+  height              String?
+  weight              String?
+  smokingStatus       String?
+  dietaryPreferences  String?
+  pregnancyStatus     Boolean?    @default(false)
+  mentalHealthHistory String?
+  immunizationStatus  String?
+  hasPastSurgeries    Boolean?    @default(false)
+  recentAnxiety       Boolean?    @default(false)
+  recentDepression    Boolean?    @default(false)
+  maritalStatus       String?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
 
   // Relations
-  patient Patient @relation(fields: [patientId],references:[id])
+  patient Patient @relation(fields: [patientId], references: [id])
 
- @@map("patient_health_data")
+  @@map("patient_health_data")
 }
 
 model MedicalReport {
-  id          String   @id @default(uuid())
-  patientId   String
-  reportName  String
-  reportLink  String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  patientId  String
+  reportName String
+  reportLink String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relation
-  patient     Patient  @relation(fields: [patientId], references: [id])
+  patient Patient @relation(fields: [patientId], references: [id])
 
   @@map("medical_reports")
 }
 
-
 model Schedule {
-  id String @id @default(uuid())
+  id            String   @id @default(uuid())
   startDateTime DateTime
-  endDateTime DateTime
+  endDateTime   DateTime
 
   doctorSchedule DoctorSchedule[]
-  createdAt DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  appointment    Appointment?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model DoctorSchedule {
-  
-   doctorId String
-   scheduleId String
-   isBooked Boolean @default(false)
-   appointment  String ?
-   doctor Doctor @relation(fields: [doctorId],references: [id])
+  doctorId      String
+  scheduleId    String
+  isBooked      Boolean      @default(false)
+  appointmentId String?      @unique
+  doctor        Doctor       @relation(fields: [doctorId], references: [id])
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
 
-  schedule Schedule @relation(fields: [scheduleId],references: [id])
-   @@id([doctorId,scheduleId])
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
 
-   @@map("doctor_schedules")
-  
+  @@id([doctorId, scheduleId])
+  @@map("doctor_schedules")
+}
+
+model Appointment {
+  id             String            @id @default(uuid())
+  patientId      String
+  patient        Patient           @relation(fields: [patientId], references: [id])
+  doctorId       String
+  doctor         Doctor            @relation(fields: [doctorId], references: [id])
+  scheduleId     String            @unique
+  schedule       Schedule          @relation(fields: [scheduleId], references: [id])
+  videoCallingId String
+  status         AppointmentStatus @default(SCHEDULED)
+  paymentStatus  PaymentStatus     @default(UNPAID)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  payment Payment ?
+
+  doctorSchedule DoctorSchedule?
+
+  @@map("appointments")
+}
+
+model Payment {
+  id                 String        @id @default(uuid())
+  appointmentId      String        @unique
+  appointment Appointment @relation(fields: [appointmentId],references: [id])
+  amount             Float
+  transactionId      String
+  status             PaymentStatus @default(UNPAID)
+  paymentGatewayData Json?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@map("payments")
 }
 
 
+
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  SCHEDULED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
 
 enum UserRole {
   SUPER_ADMIN
   ADMIN
   DOCTOR
   PATIENT
-
 }
 
 enum bloodGroup {
   A_POSITIVE
   B_POSITIVE
-
 }
+
 enum Gender {
   MALE
   FEMALE
 }
+
 enum UserStatus {
   ACTIVE
   BLOCK
