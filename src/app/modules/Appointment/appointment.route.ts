@@ -15,6 +15,7 @@ const router = express.Router();
 
 router.get("/my-appointment",auth(UserRole.PATIENT,UserRole.DOCTOR), AppointmentController.getMyAppointment);
 router.post("/",auth(UserRole.PATIENT), AppointmentController.createAppointment);
+router.patch("/status/:id",auth(UserRole.DOCTOR,UserRole.ADMIN,UserRole.SUPER_ADMIN), AppointmentController.changeAppointmentStatus);
 
 
 export const AppointmentRoute = router;
