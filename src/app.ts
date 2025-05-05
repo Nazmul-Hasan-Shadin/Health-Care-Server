@@ -5,6 +5,8 @@ import { adminRoutes } from './app/modules/admin/admin.route';
 import router from './app/routes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser'
+import cron from 'node-cron'
+import { AppointmentServices } from './app/modules/Appointment/appointment.services';
 
 const app=express();
 app.use(express.json())
@@ -13,7 +15,25 @@ app.use(cors({
      origin:'*'
 }))
 
+
+
 app.use(cookieParser())
+
+
+
+
+
+
+cron.schedule('* * * * *', () => {
+  try {
+    console.log('running a task every minute');
+    AppointmentServices.cancelUnpaidAppointment();
+  } catch (error) {
+     console.log(error);
+     
+  }
+});
+
 app.get('/',(req:Request,res:Response)=>{
     res.send('app is listening at 3000')
 })

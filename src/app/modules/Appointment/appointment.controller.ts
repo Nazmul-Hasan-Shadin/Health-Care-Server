@@ -51,6 +51,7 @@ const createAppointment =catchAsync( async (req: Request, res: Response) => {
     
   });
 
+
   export const AppointmentController={
     createAppointment,
     getMyAppointment,
