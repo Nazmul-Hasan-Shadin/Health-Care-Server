@@ -52,9 +52,24 @@ try {
     throw new AppError(500,'payment Error occurred')
 }
    
-   
+
     
 }
+
+const validatePayment=async(payload:any)=>{
+  try {
+    const response=await axios({
+        method:'GET',
+        url:`${config.ssl.sslValidationApi}?val_id=${payload.val_id}&store_id=${config.ssl.store_id}&store_passwd=${config.ssl.store_password}&format=json`
+      })
+      
+      return response.data
+
+  } catch (error) {
+     throw new AppError(500,'payment validation failed')
+  }
+}
 export const SslServices={
-    initPayment
+    initPayment,
+    validatePayment
 }

@@ -31,6 +31,37 @@ const initPayment=async(appointmentId:string)=>{
      };
     
 }
+
+
+const validatePayment=async(payload:any)=>{
+    if(!payload || payload.status || !(payload.status==='VALID')){
+        return {
+            message:"invalid payment"
+        }
+    }
+
+    
+  const response=await SslServices.validatePayment(payload)
+
+  if (response.status==='VALID') {
+    return {
+        message:" payment FAILED"
+    }
+  }
+
+    await prisma.$transaction(async(tx)=>{
+         await tx.payment.updateMany({
+            where:{
+                transactionId:response.tran_id
+            },
+            data:{
+               status:'PAID',
+               paymentGatewayData:response
+            }
+         })
+    })
+}
+
 export const PaymentServices={
-    initPayment
+    initPayment,validatePayment
 }
