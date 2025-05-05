@@ -3,7 +3,8 @@ import prisma from "../../../shared/prisma";
 
 import axios from 'axios'
 import AppError from "../../errors/AppErrors";
-const initPayment=async(paymentData:any)=>{
+import { IPaymentData } from "./ssl.interface";
+const initPayment=async(paymentData:IPaymentData)=>{
 
 try {
     const data = {
