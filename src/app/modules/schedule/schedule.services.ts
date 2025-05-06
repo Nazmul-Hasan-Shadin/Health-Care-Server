@@ -14,11 +14,11 @@ const createSchedule = async (payload: any) => {
   console.log(startDate, endDate, startTime, endTime);
   const currentDate = new Date(startDate); //start date
   const lastDate = new Date(endDate); //end date
-  console.log(currentDate);
+ 
   const interval = 30;
   const schedule = [];
   while (currentDate <= lastDate) {
-    console.log(date, "date");
+ 
     const startDateTime = new Date(
       addMinutes(
         addHours(

@@ -62,6 +62,7 @@ const getAllDoctorFromDb=async(params:Record<string,any>)=>{
    return result
 
 }
+// update doctor info with specialist also
 
 const updateDoctorFromDb = async (id: string, payload: any) => {
   const { specialties, ...doctorData } = payload;
@@ -81,6 +82,17 @@ const updateDoctorFromDb = async (id: string, payload: any) => {
         doctorSpecialties: true,
       },
     });
+
+  //   {
+  //     "name": "Doctor anamul haque rabbani",
+  //     "specialties": [
+  //         {
+  //             "specialtiesId": "d6776fac-9cee-42a4-a818-ce723766f911",
+  //             "isDeleted": true
+  //         }
+  //         // "da214640-78a5-4bc1-a7bc-6d250a89bdcd"
+  //     ]
+  // }
     
     if (specialties && specialties.length >0){
         const deleteSpecialtiesIds=specialties.filter(specialty=>specialty.isDeleted)

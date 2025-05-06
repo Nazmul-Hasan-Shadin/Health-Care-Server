@@ -6,6 +6,7 @@ import { IAuthUsers } from "../../interfaces/common";
 
 
 //todo=getall review with filtering like patient email doctor email accessible by super admin
+//get all prescription with filtering and add zod validation to all payload
 
 const createSchedule = catchAsync(async (req:Request & {user?:IAuthUsers}, res:Response) => {
     

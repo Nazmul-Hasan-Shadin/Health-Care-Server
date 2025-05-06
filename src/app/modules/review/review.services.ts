@@ -29,18 +29,37 @@ const createReview = async (user: IAuthUsers, payload: any) => {
         
     throw new AppError(503,'this is not your appointment id')
   }
+   
+   return await prisma.$transaction(async(tx)=>{
+     
+   const result=await tx.review.create({
+    data:{
+     appointmentId:appointmentData.id,
+     doctorId:appointmentData.doctorId,
+     patientId:appointmentData.patientId,
+     comment:payload.comment,
+     rating:payload.rating
+    }
+})
  
-   const result=await prisma.review.create({
-       data:{
-        appointmentId:appointmentData.id,
-        doctorId:appointmentData.doctorId,
-        patientId:appointmentData.patientId,
-        comment:payload.comment,
-        rating:payload.rating
-       }
+ const averageRating=await tx.review.aggregate({
+    _avg:{
+        rating:true
+    }
+ })
+   await tx.doctor.update({
+    where   :{
+        id:result.doctorId
+    },
+    data:{
+        averageRating:averageRating._avg.rating
+    }
    })
 
    return result 
+
+  })
+
 
 };
 
